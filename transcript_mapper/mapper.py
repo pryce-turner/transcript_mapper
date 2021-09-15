@@ -1,5 +1,8 @@
 import os
 import csv
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class Mapper:
 
@@ -11,6 +14,7 @@ class Mapper:
           None
         """
         self.txs = {}
+        logging.info(f'Initializing Mapper with transcripts loaded from {tx_path}')
         with open(tx_path, 'r') as tx_in:
             for r in csv.reader(tx_in, delimiter='\t'):
                 self.txs[r[0]] = {
@@ -18,6 +22,7 @@ class Mapper:
                     "start": int(r[2]),
                     "cig": r[3]
                 }
+        logging.info('Transcripts loaded without error')
 
     @staticmethod
     def parse_cig(cig):
@@ -54,6 +59,7 @@ class Mapper:
         tx_map = []
         gen_map = []
         
+        logging.info(f'Creating transcript maps for {tx_name}')
         for op, count in self.parse_cig(tx["cig"]):
             if op == 'M':
                 tx_pair = [tx_idx]
@@ -71,6 +77,7 @@ class Mapper:
         
         tx["gen_map"] = tuple(gen_map)
         tx["tx_map"] = tuple(tx_map)
+        logging.info('Maps created without error, added to transcript dict')
 
     def to_genomic(self, tx_name, tx_pos):
         """ Translate transcript coordinate to genomic
@@ -86,24 +93,8 @@ class Mapper:
         if tx.get("gen_map") is None:
             self.make_map(tx_name)
 
+        logging.info(f'Looking up genomic coordinate for transcript {tx_name} at position {tx_pos}')
         for g, t in zip(tx["gen_map"], tx["tx_map"]):
             if t[0] <= tx_pos <= t[1]:
                 gen_pos = g[0] + (tx_pos - t[0])
                 return tx["chrom"], gen_pos
-
-    def process_queries(self, in_path, out_path):
-        in_ = open(in_path, 'r')
-        out_ = open(out_path, 'a')
-        for r in csv.reader(in_, delimiter='\t'):
-            tx_name, tx_pos = r[0], int(r[1])
-
-            try:
-                chrom, gen_pos = self.to_genomic(tx_name, tx_pos)
-            except TypeError:
-                print(f'No match found for {tx_name} at {tx_pos}, insertion perhaps? Continuing..')
-                continue
-
-            out_.write(f'{tx_name}\t{tx_pos}\t{chrom}\t{gen_pos}\n')
-
-        in_.close()
-        out_.close()

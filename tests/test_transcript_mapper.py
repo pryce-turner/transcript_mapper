@@ -1,18 +1,16 @@
 import os
 import unittest
 from filecmp import cmp
-
-import sys
-BASE = '/home/pryce/Desktop/transcript_mapper/'
-sys.path.insert(0, BASE)
-
 from transcript_mapper.mapper import Mapper
+
+tx_in_path = 'tests/input/transcripts.tsv'
+qs_in_path = 'tests/input/queries.tsv'
+out_path = 'tests/output/actual.tsv'
 
 class TestMapper(unittest.TestCase):
 
     def setUp(self):
-        self.out_path = os.path.join(BASE, 'tests/output/actual.tsv')
-        self.mapper = Mapper(os.path.join(BASE, 'tests/input/transcripts.tsv'))
+        self.mapper = Mapper(tx_in_path)
 
     def test_to_genomic(self):
         chrom, pos = self.mapper.to_genomic('TR1', 4)
@@ -27,14 +25,9 @@ class TestMapper(unittest.TestCase):
         self.assertEqual(exp_tx, self.mapper.txs[tx]["tx_map"])
         self.assertEqual(exp_gen, self.mapper.txs[tx]["gen_map"])
 
-    def test_overall(self):
-        
-        self.mapper.process_queries(os.path.join(BASE, 'tests/input/queries.tsv'), self.out_path)
-        self.assertTrue(cmp(os.path.join(BASE, 'tests/output/expected.tsv'), self.out_path))
-
     def tearDown(self):
         try:
-            os.remove(self.out_path)
+            os.remove(out_path)
         except FileNotFoundError:
             pass
 
