@@ -7,7 +7,7 @@ from transcript_mapper.mapper import Mapper
 class TestMapper(unittest.TestCase):
 
     def setUp(self):
-        self.mapper = Mapper('input/transcripts.tsv')
+        self.mapper = Mapper('/home/pryce/Desktop/transcript_mapper/tests/input/transcripts.tsv')
 
     # def test_mapper(self):
     #     ...
