@@ -11,6 +11,7 @@ from transcript_mapper.mapper import Mapper
 class TestMapper(unittest.TestCase):
 
     def setUp(self):
+        self.out_path = os.path.join(BASE, 'tests/output/actual.tsv')
         self.mapper = Mapper(os.path.join(BASE, 'tests/input/transcripts.tsv'))
 
     def test_to_genomic(self):
@@ -27,9 +28,15 @@ class TestMapper(unittest.TestCase):
         self.assertEqual(exp_gen, self.mapper.txs[tx]["gen_map"])
 
     def test_overall(self):
-        self.mapper.process_queries(os.path.join(BASE, 'tests/input/queries.tsv'))
-        self.assertTrue(cmp(os.path.join(BASE, 'tests/output/expected.tsv'), os.path.join(BASE, 'tests/output/actual.tsv')))
+        
+        self.mapper.process_queries(os.path.join(BASE, 'tests/input/queries.tsv'), self.out_path)
+        self.assertTrue(cmp(os.path.join(BASE, 'tests/output/expected.tsv'), self.out_path))
 
+    def tearDown(self):
+        try:
+            os.remove(self.out_path)
+        except FileNotFoundError:
+            pass
 
 if __name__ == '__main__':
     unittest.main()
