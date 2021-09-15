@@ -1,29 +1,35 @@
+import os
 import unittest
 from filecmp import cmp
+
 import sys
-sys.path.insert(0,'/home/pryce/Desktop/transcript_mapper/')
+BASE = '/home/pryce/Desktop/transcript_mapper/'
+sys.path.insert(0, BASE)
+
 from transcript_mapper.mapper import Mapper
 
 class TestMapper(unittest.TestCase):
 
     def setUp(self):
-        self.mapper = Mapper('/home/pryce/Desktop/transcript_mapper/tests/input/transcripts.tsv')
+        self.mapper = Mapper(os.path.join(BASE, 'tests/input/transcripts.tsv'))
 
-    # def test_mapper(self):
-    #     ...
-
-    # def test_overall(self):
-    #     self.mapper.map()
-    #     self.assertTrue(cmp('output/expected.tsv', 'output/actual.tsv'))
+    def test_to_genomic(self):
+        chrom, pos = self.mapper.to_genomic('TR1', 4)
+        self.assertEqual(chrom, 'CHR1')
+        self.assertEqual(pos, 7)
 
     def test_make_map(self):
-        cig = "8M7D6M2I2M11D7M"
         tx = "TR1"
-        actual_gen, actual_tx = self.mapper.make_map(tx)
-        exp_gen = [[3, 10], [18, 23], [24, 25], [37, 43]]
-        exp_tx = [[0, 7],[8, 13], [16, 17], [18, 24]]
-        self.assertEqual(exp_tx, actual_tx)
-        self.assertEqual(exp_gen, actual_gen)
+        self.mapper.make_map(tx)
+        exp_gen = ((3, 10), (18, 23), (24, 25), (37, 43))
+        exp_tx = ((0, 7),(8, 13), (16, 17), (18, 24))
+        self.assertEqual(exp_tx, self.mapper.txs[tx]["tx_map"])
+        self.assertEqual(exp_gen, self.mapper.txs[tx]["gen_map"])
+
+    def test_overall(self):
+        self.mapper.process_queries(os.path.join(BASE, 'tests/input/queries.tsv'))
+        self.assertTrue(cmp(os.path.join(BASE, 'tests/output/expected.tsv'), os.path.join(BASE, 'tests/output/actual.tsv')))
+
 
 if __name__ == '__main__':
     unittest.main()
