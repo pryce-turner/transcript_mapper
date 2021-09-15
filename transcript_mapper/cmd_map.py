@@ -17,7 +17,7 @@ def process_queries(input_transcripts, input_queries, output_path):
         qs = open(input_queries, 'r')
         out = open(output_path, 'a')
     except FileNotFoundError:
-        logging.error('Input/query file not found or unsuitable output path, exiting...', exc_info=True)
+        logging.error('Input/query file not found or unsuitable output path, exiting..', exc_info=True)
         sys.exit()
 
     for r in csv.reader(qs, delimiter='\t'):
@@ -33,6 +33,7 @@ def process_queries(input_transcripts, input_queries, output_path):
 
     qs.close()
     out.close()
+    logging.info(f'Successfully processed transcripts in {input_queries}, exiting..')
 
 if __name__ == "__main__":
     process_queries()

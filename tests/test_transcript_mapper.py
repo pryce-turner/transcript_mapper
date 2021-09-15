@@ -1,6 +1,4 @@
-import os
 import unittest
-from filecmp import cmp
 from transcript_mapper.mapper import Mapper
 
 tx_in_path = 'tests/input/transcripts.tsv'
@@ -24,12 +22,3 @@ class TestMapper(unittest.TestCase):
         exp_tx = ((0, 7),(8, 13), (16, 17), (18, 24))
         self.assertEqual(exp_tx, self.mapper.txs[tx]["tx_map"])
         self.assertEqual(exp_gen, self.mapper.txs[tx]["gen_map"])
-
-    def tearDown(self):
-        try:
-            os.remove(out_path)
-        except FileNotFoundError:
-            pass
-
-if __name__ == '__main__':
-    unittest.main()
