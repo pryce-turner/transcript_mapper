@@ -20,8 +20,9 @@ class TestMapper(unittest.TestCase):
         cig = "8M7D6M2I2M11D7M"
         tx = "TR1"
         actual_gen, actual_tx = self.mapper.make_map(tx)
-        exp_gen = [[3, 10], [18, 23], [24, 25], [36, 42]]
+        exp_gen = [[3, 10], [18, 23], [24, 25], [37, 43]]
         exp_tx = [[0, 7],[8, 13], [16, 17], [18, 24]]
+        self.assertEqual(exp_tx, actual_tx)
         self.assertEqual(exp_gen, actual_gen)
 
 if __name__ == '__main__':
