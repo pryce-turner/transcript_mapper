@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "transcript_mapper"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Translate transcript positions to their genomic counterparts"
+authors = ["Pryce Turner <pryce.turner@gmail.com>"]
+
+[tool.poetry.scripts]
+map = "transcript_mapper.cmd_map:process_queries"
 
 [tool.poetry.dependencies]
 python = "^3.8"
