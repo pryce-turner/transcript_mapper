@@ -1,4 +1,5 @@
 import sys
+import os
 import csv
 import click
 import logging
@@ -10,7 +11,11 @@ logging.basicConfig(level=logging.INFO)
 @click.option('--input-transcripts', '-t', required=True, help="File path from which to load transcript definitions")
 @click.option('--input-queries', '-q', required=True, help="File path for position translation queries")
 @click.option('--output-path', '-o', help="File path for translation output")
-def process_queries(input_transcripts, input_queries, output_path):
+def process_queries(input_transcripts, input_queries, output_path=None):
+
+    if output_path is None:
+        i_fname = os.path.basename(input_queries)
+        output_path = os.path.join(os.path.dirname(input_queries), f'{i_fname}_translated')
     
     try:
         mapper = Mapper(input_transcripts)

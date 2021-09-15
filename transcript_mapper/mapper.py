@@ -33,7 +33,7 @@ class Mapper:
         Yields:
           op (char), count (int): operator and count for each operator in input
         """
-        ops = ['M', 'D', 'I']
+        ops = ['M', 'D', 'N', 'I']
         int_str = ''
         for i in cig:
             if i not in ops:
@@ -70,7 +70,7 @@ class Mapper:
                 gen_pair.append(gen_idx - 1)
                 tx_map.append(tuple(tx_pair))
                 gen_map.append(tuple(gen_pair))
-            elif op == 'D':
+            elif op == 'D' or op == 'N':
                 gen_idx += count
             elif op == 'I':
                 tx_idx += count
