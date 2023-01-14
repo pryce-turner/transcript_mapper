@@ -11,8 +11,7 @@ with `poetry run map` after running `poetry install`. Tests can be run with `poe
 Considerations
 --------------
 
-In keeping with the spirit of the exercise, outside production tools were not consulted in
-coming up with a solution. As such, a number of assumptions were made which may be vulnerable to edge-cases
+A number of assumptions were made which may be vulnerable to edge-cases
 if this were used on a more diverse dataset. However, a few key strengths should be highlighted:
 
 1. The most expensive operation, making the mapping, is only called when the specific transcript is
